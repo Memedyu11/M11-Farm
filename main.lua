@@ -151,3 +151,35 @@ task.spawn(function()
         end
     end
 end)
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local player = Players.LocalPlayer
+
+-- Monitor collection limit and auto-reset when full (50/50)
+task.spawn(function()
+    pcall(function()
+        local remotes = ReplicatedStorage:WaitForChild("Remotes", 5)
+        local gameplay = remotes and remotes:WaitForChild("Gameplay", 5)
+        local coinsStartedEvent = gameplay and gameplay:WaitForChild("CoinsStarted", 5)
+
+        if coinsStartedEvent then
+            coinsStartedEvent.OnClientEvent:Connect(function(data)
+                if type(data) == "table" then
+                    for _, info in pairs(data) do
+                        if type(info) == "table" and info.CollectedAmount and info.CollectionLimit then
+                            -- If collected amount reaches or exceeds the limit (50)[span_1](start_span)[span_1](end_span)
+                            if info.CollectedAmount >= info.CollectionLimit then
+                                local char = player.Character
+                                if char and char:FindFirstChild("HumanoidRootPart") then
+                                    -- Auto reset character
+                                    char:BreakJoints()
+                                    task.wait(3) -- Wait safely for respawn
+                                end
+                            end
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+end)
