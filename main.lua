@@ -141,9 +141,9 @@ task.spawn(function()
                         end
                         tween:Cancel()
 
-                        -- Paranın üstüne varıp aldıktan sonra 0.3 saniye bekle
+                        -- Paranın üstüne varıp aldıktan sonra 0.1 saniye bekle
                         if autoFarmEnabled then
-                            task.wait(0.3)
+                            task.wait(0.1) 
                         end
                     end
                 end
@@ -151,6 +151,7 @@ task.spawn(function()
         end
     end
 end)
+
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local player = Players.LocalPlayer
